@@ -11,8 +11,14 @@ const db = new sqlite.Database("users.sqlite3");
 
 const KEY = "my y(!!1!11!)<'SECRET>Key'!";
 
+// server port run
+let port = process.env.PORT || 3000;
+app.listen(port, () => {
+  return console.log("User authentication server lintening on port " + port);
+})
+
 // signup route
-app.post('/signup', express.urlencoded(), function(req, res){
+app.post('/signup', express.urlencoded(), (req, res) => {
   let username = req.body.username;
   let password = req.body.password; 
 
@@ -35,7 +41,7 @@ app.post('/signup', express.urlencoded(), function(req, res){
 });
 
 // login route
-app.post('/login', express.urlencoded(), function(req,res) {
+app.post('/login', express.urlencoded(), (req, res) => {
   let username = req.body.username;
   let password = req.body.password; 
   console.log(username + " attempted login...");
@@ -66,7 +72,7 @@ app.post('/login', express.urlencoded(), function(req,res) {
 });
 
 // data access route
-app.get('/data', function(req,res){
+app.get('/data', (req, res) => {
   let str = req.get('Authorization');
   try {
     jwt.verify(str, KEY, {algorithm: 'HS256'});
