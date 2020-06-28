@@ -34,4 +34,34 @@ app.post('/signup', express.urlencoded(), function(req, res){
   }); 
 });
 
+// login route
+app.post('/login', express.urlencoded(), function(req,res) {
+  let username = req.body.username;
+  let password = req.body.password; 
+  console.log(username + " attempted login...");
+
+  password = crypto.createHash('sha256')
+    .update(password)
+    .digest('hex');
+
+  db.get("SELECT * FROM users WHERE (username,password) = (?,?)", 
+    [username, password], function(err, row) {
+      if(row != undefined) {
+        let payload = {
+          username: username
+        }
+
+        let token = jwt.sign(payload, KEY, {
+          algorithm: 'HS256',
+          expiresIn: "5d"
+        });
+        console.log("Sucess");
+        res.send(token);
+      } else {
+        console.error("Failure");
+        res.status(401);
+        res.send("There's no user matching that.");
+      }
+    });
+});
 
