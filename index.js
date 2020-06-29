@@ -2,14 +2,18 @@ const sqlite = require('sqlite3');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const crypto = require('crypto');
+const bodyParser = require('body-parser');
 
-// app express initializate 
+// app express initializate
 const app = express();
 
 // DB initializate
 const db = new sqlite.Database("users.sqlite3");
 
 const KEY = "my y(!!1!11!)<'SECRET>Key'!";
+
+// parser request body to JSON
+app.use(express.urlencoded({ extended: true }))
 
 // server port run
 let port = process.env.PORT || 3000;
@@ -18,7 +22,7 @@ app.listen(port, () => {
 })
 
 // signup route
-app.post('/signup', express.urlencoded(), (req, res) => {
+app.post('/signup', (req, res) => {
   let username = req.body.username;
   let password = req.body.password; 
 
@@ -41,7 +45,7 @@ app.post('/signup', express.urlencoded(), (req, res) => {
 });
 
 // login route
-app.post('/login', express.urlencoded(), (req, res) => {
+app.post('/login', (req, res) => {
   let username = req.body.username;
   let password = req.body.password; 
   console.log(username + " attempted login...");
